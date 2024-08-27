@@ -1,17 +1,34 @@
 "use client";
-import { Input, Toast, Button, NavBar } from "antd-mobile";
+import { Input, Toast, Button, NavBar, Space } from "antd-mobile";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import sc_pub_buttonBg from "@/../public/buttonBg.png";
 import walletBg from "@/../public/walletBg.png";
 import sc_pub_cld from "@/../public/cld.png";
+import sc_pub_imag_right from "@/../public/right.png";
+import { useStores } from "@/stores/useStores";
 export default function Page() {
+  console.log("qqqqq");
   const router = useRouter();
+  const {
+    walletStore: { currttenYue },
+  } = useStores();
   return (
     <div>
       <NavBar
         style={{ background: "white", height: 88 }}
         onBack={() => router.back()}
+        right={
+          <div style={{ marginRight: 15 }}>
+            <Space>
+              <Image
+                src={sc_pub_imag_right}
+                alt=""
+                onClick={() => router.push("/wallet/walletSetting")}
+              />
+            </Space>
+          </div>
+        }
       >
         钱包
       </NavBar>
@@ -51,7 +68,7 @@ export default function Page() {
               marginLeft: 10,
             }}
           >
-            2000
+            {currttenYue}
           </div>
         </div>
 
