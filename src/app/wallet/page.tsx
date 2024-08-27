@@ -7,8 +7,8 @@ import walletBg from "@/../public/walletBg.png";
 import sc_pub_cld from "@/../public/cld.png";
 import sc_pub_imag_right from "@/../public/right.png";
 import { useStores } from "@/stores/useStores";
+
 export default function Page() {
-  console.log("qqqqq");
   const router = useRouter();
   const {
     walletStore: { currttenYue },
@@ -16,8 +16,11 @@ export default function Page() {
   return (
     <div>
       <NavBar
-        style={{ background: "white", height: 88 }}
-        onBack={() => router.back()}
+        style={{ background: "white", height: 64 }}
+        onBack={() => {
+          // 调用原生方法
+          (window as any).webkit.messageHandlers.event.postMessage("goBack");
+        }}
         right={
           <div style={{ marginRight: 15 }}>
             <Space>
@@ -37,7 +40,7 @@ export default function Page() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          height: "100vh",
+          // height: "100vh",
         }}
       >
         <Image src={walletBg} alt=""></Image>

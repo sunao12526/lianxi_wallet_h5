@@ -20,14 +20,16 @@ export default function Page() {
       }}
     >
       <NavBar
-        style={{ background: "white", height: 88 }}
+        style={{ background: "white", height: 64 }}
         right={
           <div style={{ marginRight: 15 }}>
             <Space>
               <Image
                 src={sc_pub_imag_right}
                 alt=""
-                onClick={() => router.push("/wallet/walletSetting")}
+                onClick={() => {
+                  router.push("/wallet/walletSetting");
+                }}
               />
             </Space>
           </div>
