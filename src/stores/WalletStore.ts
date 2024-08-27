@@ -12,17 +12,24 @@ import {
 export const WalletStoreModel = types
   .model("WalletStore")
   .props({
-    currttenYue: types.optional(types.number, 3000),
-    handleStatus: types.optional(
-      types.union(
-        types.literal("修改用户"),
-        types.literal("创建用户"),
-        types.literal("创建成功"),
-        types.literal("修改成功"),
-        types.literal("删除成功"),
-        types.literal("操作失败")
-      ),
-      "创建用户"
+    currttenYue: types.optional(types.number, 100),
+    isActivity: types.optional(types.boolean, true),
+    items: types.optional(types.array(types.string), [
+      "1",
+      "6",
+      "30",
+      "98",
+      "298",
+      "518",
+    ]),
+    currentItem: types.optional(
+      types.enumeration(["1", "6", "30", "98", "298", "518"]),
+      "1"
     ),
   })
-  .views((self) => ({}));
+  .views((self) => ({}))
+  .actions((self) => ({
+    setCurrentItem(item: SnapshotIn<typeof self.currentItem>) {
+      self.currentItem = item;
+    },
+  }));
