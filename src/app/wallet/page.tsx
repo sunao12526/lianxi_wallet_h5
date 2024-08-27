@@ -3,14 +3,14 @@ import { Input, Toast, Button, NavBar } from "antd-mobile";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import sc_pub_mask from "@/../public/buttonBg.png";
-import sc_pub_mask1 from "@/../public/v02-waves-23 1.png";
+import sc_pub_mask1 from "@/../public/walletBg.png";
 import sc_pub_imag1 from "@/../public/椭圆形.png";
 export default function Page() {
   const router = useRouter();
   return (
     <div>
       <NavBar
-        style={{ background: "white", height: 64 }}
+        style={{ background: "white", height: 88 }}
         onBack={() => router.back()}
       >
         钱包

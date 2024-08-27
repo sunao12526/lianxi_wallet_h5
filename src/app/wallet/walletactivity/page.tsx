@@ -20,7 +20,7 @@ export default function Page() {
       }}
     >
       <NavBar
-        style={{ background: "white", height: 64 }}
+        style={{ background: "white", height: 88 }}
         right={
           <div style={{ marginRight: 15 }}>
             <Space>

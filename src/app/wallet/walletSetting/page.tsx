@@ -20,7 +20,7 @@ export default function Page() {
       }}
     >
       <NavBar
-        style={{ background: "white", height: 64 }}
+        style={{ background: "white", height: 88 }}
         onBack={() => router.back()}
       >
         支付管理

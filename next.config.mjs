@@ -1,7 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // experimental: {
+    //     transpilePackages: ['antd-mobile'],
+    //     appDir: true,
+    // },
     // output: 'export',
-    // basePath: '/Users/pf/sunaoWork/lianxi_wallet_h5/out',
+    // basePath: '/out',
+    // images: {
+    //     unoptimized: true,
+    //     remotePatterns: [
+    //         {
+    //             protocol: 'https',
+    //             hostname: 'app.lianxi.com',
+    //             port: '',
+    //             pathname: '/upload/**',
+    //         },
+    //         {
+    //             protocol: 'https',
+    //             hostname: 'testapp.lianxi.com',
+    //             port: '',
+    //             pathname: '/upload/**',
+    //         },
+    //     ],
+    // },
 };
 
 export default nextConfig;
