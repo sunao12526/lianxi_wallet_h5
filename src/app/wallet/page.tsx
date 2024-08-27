@@ -2,9 +2,9 @@
 import { Input, Toast, Button, NavBar } from "antd-mobile";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import sc_pub_mask from "@/../public/buttonBg.png";
-import sc_pub_mask1 from "@/../public/walletBg.png";
-import sc_pub_imag1 from "@/../public/椭圆形.png";
+import sc_pub_buttonBg from "@/../public/buttonBg.png";
+import walletBg from "@/../public/walletBg.png";
+import sc_pub_cld from "@/../public/cld.png";
 export default function Page() {
   const router = useRouter();
   return (
@@ -23,7 +23,7 @@ export default function Page() {
           height: "100vh",
         }}
       >
-        <Image src={sc_pub_mask1} alt=""></Image>
+        <Image src={walletBg} alt=""></Image>
         <div
           style={{
             position: "absolute",
@@ -43,7 +43,7 @@ export default function Page() {
             alignItems: "flex-end",
           }}
         >
-          <Image src={sc_pub_imag1} alt="" />
+          <Image src={sc_pub_cld} alt="" />
           <div
             style={{
               color: "white",
@@ -81,7 +81,7 @@ export default function Page() {
         <Image
           style={{ marginTop: 50 }}
           onClick={() => router.push("/wallet/walletactivity")}
-          src={sc_pub_mask}
+          src={sc_pub_buttonBg}
           width={220}
           height={50}
           alt=""

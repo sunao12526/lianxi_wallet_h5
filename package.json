@@ -9,10 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.4.3",
+    "@types/js-base64": "^3.3.1",
+    "@types/pako": "^2.0.3",
     "antd-mobile": "^5.37.1",
+    "axios": "^1.7.5",
+    "griffith": "^1.31.0",
+    "js-md5": "^0.8.3",
+    "moment": "^2.30.1",
     "next": "14.2.6",
+    "pako": "^2.1.0",
+    "qrcode.react": "^3.1.0",
+    "qs": "^6.13.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.3.0",
+    "react-otp-input": "^3.1.1",
+    "react-timer-hook": "^3.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",
