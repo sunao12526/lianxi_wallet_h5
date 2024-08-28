@@ -14,6 +14,7 @@ export const WalletStoreModel = types
   .props({
     currttenYue: types.optional(types.number, 100),
     isActivity: types.optional(types.boolean, true),
+    visibleCharge: types.optional(types.boolean, false),
     items: types.optional(types.array(types.string), [
       "1",
       "6",
@@ -31,5 +32,8 @@ export const WalletStoreModel = types
   .actions((self) => ({
     setCurrentItem(item: SnapshotIn<typeof self.currentItem>) {
       self.currentItem = item;
+    },
+    setVisibleCharge(visible: SnapshotIn<typeof self.visibleCharge>) {
+      self.visibleCharge = visible;
     },
   }));
