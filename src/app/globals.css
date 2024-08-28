@@ -30,4 +30,11 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .bg-jiesuan {
+    background-image: url('/jiesuanBG.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }

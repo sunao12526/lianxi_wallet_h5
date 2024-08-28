@@ -1,8 +1,11 @@
 "use client";
-import { Toast, NavBar, List } from "antd-mobile";
+import { Input, Toast, Button, Space, NavBar, List, Switch } from "antd-mobile";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const [password, setPassword] = useState<string>("");
+  const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
   return (
     <div
@@ -17,35 +20,34 @@ export default function Page() {
         style={{ background: "white", height: 64 }}
         onBack={() => router.back()}
       >
-        支付管理
+        结算记录
       </NavBar>
 
       <List header=" ">
         <List.Item
-          extra="已认证"
+          extra="+345此聊豆"
           clickable
-          description="管理已授权的产品和设备"
+          arrowIcon={false}
+          description="2019-09-01"
         >
-          实名认证
-        </List.Item>
-        <List.Item clickable>修改支付密码</List.Item>
-        <List.Item clickable>忘记支付密码</List.Item>
-        <List.Item clickable extra="已认证">
-          支付宝账号
+          充值
         </List.Item>
         <List.Item
+          extra="-345此聊豆"
           clickable
-          onClick={() => router.push("/wallet/walletSettle")}
+          arrowIcon={false}
+          description="2019-09-01"
         >
-          结算此聊豆
+          提现
         </List.Item>
         <List.Item
+          extra="+345此聊豆"
           clickable
-          onClick={() => router.push("/wallet/walletSettleHistory")}
+          arrowIcon={false}
+          description="2019-09-01"
         >
-          结算记录
+          提现
         </List.Item>
-        <List.Item clickable>常见问题</List.Item>
       </List>
     </div>
   );

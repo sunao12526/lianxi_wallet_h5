@@ -12,7 +12,7 @@ import {
 export const WalletStoreModel = types
   .model("WalletStore")
   .props({
-    currttenYue: types.optional(types.number, 100),
+    currttenYue: types.optional(types.number, 3626),
     isActivity: types.optional(types.boolean, true),
     visibleCharge: types.optional(types.boolean, false),
     items: types.optional(types.array(types.string), [

@@ -93,82 +93,105 @@ const Page_active = observer(function Page_active() {
     <div
       style={{
         display: "flex",
+        flex: 1,
+        width: "100%",
         flexDirection: "column",
       }}
     >
-      <Grid
-        columns={3}
-        gap={8}
-        style={{
-          background: "#F7F7F7",
-          padding: 5,
-          paddingTop: 10,
-          paddingBottom: 10,
-        }}
-      >
-        {items.map((item) => {
-          return (
-            <Grid.Item key={item} onClick={() => setCurrentItem(item)}>
-              <div
-                style={styles}
-                className={
-                  currentItem === item
-                    ? `bg-hero-pattern bg-cover bg-center`
-                    : ""
-                }
-              >
+      <div style={{ display: "flex", alignSelf: "center" }}>
+        <Grid
+          columns={3}
+          gap={8}
+          style={{
+            background: "#F7F7F7",
+            padding: 5,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          {items.map((item) => {
+            return (
+              <Grid.Item key={item} onClick={() => setCurrentItem(item)}>
                 <div
-                  style={{
-                    color: handleColor(item).titleColor,
-                    fontSize: 16,
-                  }}
+                  style={styles}
+                  className={
+                    currentItem === item
+                      ? `bg-hero-pattern bg-cover bg-center`
+                      : ""
+                  }
                 >
-                  {item}元
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "flex-end",
-                    marginTop: 5,
-                  }}
-                >
-                  <Image
-                    src={sc_pub_cld}
-                    width={15}
-                    style={{ marginBottom: 2 }}
-                    alt=""
-                  />
                   <div
                     style={{
-                      color: handleColor(item).desColor,
-                      fontSize: 14,
-                      marginLeft: 3,
+                      color: handleColor(item).titleColor,
+                      fontSize: 16,
                     }}
                   >
-                    {Number(item) * 7}此聊豆
+                    {item}元
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "flex-end",
+                      marginTop: 5,
+                    }}
+                  >
+                    <Image
+                      src={sc_pub_cld}
+                      width={15}
+                      style={{ marginBottom: 2 }}
+                      alt=""
+                    />
+                    <div
+                      style={{
+                        color: handleColor(item).desColor,
+                        fontSize: 14,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {Number(item) * 7}此聊豆
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Grid.Item>
-          );
-        })}
-      </Grid>
-      <List header=" ">
-        <List.Item prefix={<Radio>已阅读并同意</Radio>} clickable>
-          <div style={{ color: "#6A70F8" }}>《用户充值协议》</div>
-        </List.Item>
-        <List.Item clickable>交易记录</List.Item>
-      </List>
-      <Image
-        style={{ marginTop: 50, alignSelf: "center" }}
-        onClick={() => {
-          setVisibleCharge(true);
-        }}
-        src={sc_pub_chargeBt}
-        width={window.innerWidth - 20 * 2}
-        alt=""
-      />
+              </Grid.Item>
+            );
+          })}
+        </Grid>
+      </div>
+      <div>
+        <List
+          style={{
+            "--border-bottom": "solid 8px #F7F7F7",
+            "--border-top": "0px ",
+          }}
+        >
+          <List.Item prefix={<Radio>已阅读并同意</Radio>} clickable>
+            <div style={{ color: "#6A70F8" }}>《用户充值协议》</div>
+          </List.Item>
+        </List>
+        <List
+          style={{
+            "--border-bottom": "solid 8px #F7F7F7",
+            "--border-top": "0px",
+          }}
+        >
+          <List.Item
+            clickable
+            onClick={() => router.push("/wallet/walletHistory")}
+          >
+            交易记录
+          </List.Item>
+        </List>
+        <Image
+          style={{ marginTop: 50, marginLeft: 20 }}
+          onClick={() => {
+            setVisibleCharge(true);
+          }}
+          src={sc_pub_chargeBt}
+          width={window.innerWidth - 20 * 2}
+          alt=""
+        />
+      </div>
       <Popup
         bodyStyle={{
           borderTopLeftRadius: "8px",
@@ -270,13 +293,16 @@ export default function Page() {
           (window as any).webkit.messageHandlers.event.postMessage("goBack");
         }}
         right={
-          <div style={{ marginRight: 15 }}>
+          <div
+            style={{
+              marginRight: 15,
+              paddingBottom: 10,
+              paddingTop: 10,
+            }}
+            onClick={() => router.push("/wallet/walletSetting")}
+          >
             <Space>
-              <Image
-                src={sc_pub_imag_right}
-                alt=""
-                onClick={() => router.push("/wallet/walletSetting")}
-              />
+              <Image src={sc_pub_imag_right} alt="" />
             </Space>
           </div>
         }
@@ -288,7 +314,6 @@ export default function Page() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          // height: "100vh",
         }}
       >
         <Image src={walletBg} alt=""></Image>
