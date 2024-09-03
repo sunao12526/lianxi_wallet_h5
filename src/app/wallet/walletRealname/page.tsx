@@ -24,12 +24,21 @@ import { useTimer } from "react-timer-hook";
 import utils from "@/utils/utils";
 import { AxiosResponse } from "axios";
 import httpRequest from "@/utils/httpRequest";
+import { useStores } from "@/models";
 export default function Page() {
   const [imgFile, setimgFile] = useState<string>("");
   const [file, setfile] = useState<File>();
+  const [imgFilef, setimgFilef] = useState<string>("");
+  const [filef, setfilef] = useState<File>();
   const router = useRouter();
+  const {
+    walletStore: { fetch_verifyRealName },
+  } = useStores();
 
   const onSubmit = async ({ name, num }: { name: string; num: string }) => {
+    if (imgFile === "" || imgFilef === "") {
+      return Toast.show("请输入完整信息！");
+    }
     console.log(name);
     console.log(num);
   };
@@ -48,7 +57,20 @@ export default function Page() {
     };
     return imageItem;
   };
+  const mockUploadf = async (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setimgFilef(reader.result as string);
+      setfilef(file);
+    };
 
+    const imageItem: ImageUploadItem = {
+      key: "",
+      url: "",
+    };
+    return imageItem;
+  };
   const beforeUpload = (file: File) => {
     if (file.size > 1024 * 1024 * 10) {
       Toast.show("请选择小于 10M 的图片");
@@ -130,6 +152,23 @@ export default function Page() {
                       width={160}
                       height={100}
                     />
+                    <Image
+                      onClick={() => {
+                        setimgFile("");
+                        setfile(undefined);
+                      }}
+                      style={{
+                        visibility: imgFile.length > 0 ? "visible" : "hidden",
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        zIndex: 1,
+                      }}
+                      src={sc_pub_imag_sfz_close}
+                      alt={""}
+                      width={21}
+                      height={21}
+                    />
                   </div>
                 </ImageUploader>
               </div>
@@ -148,19 +187,30 @@ export default function Page() {
               <div className="flex items-center justify-center overflow-hidden">
                 <ImageUploader
                   beforeUpload={beforeUpload}
-                  upload={mockUpload}
+                  upload={mockUploadf}
                   renderItem={() => null}
                 >
                   <div style={{ width: 160, height: 100 }}>
                     <Image
-                      src={imgFile.length > 0 ? imgFile : sc_pub_imag_ps_sfz_f}
+                      src={
+                        imgFilef.length > 0 ? imgFilef : sc_pub_imag_ps_sfz_f
+                      }
                       alt={""}
                       width={160}
                       height={100}
                     />
                     <Image
-                      onClick={() => {}}
-                      style={{ position: "absolute", top: 0, right: 0 }}
+                      onClick={() => {
+                        setimgFilef("");
+                        setfilef(undefined);
+                      }}
+                      style={{
+                        visibility: imgFilef.length > 0 ? "visible" : "hidden",
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        zIndex: 1,
+                      }}
                       src={sc_pub_imag_sfz_close}
                       alt={""}
                       width={21}

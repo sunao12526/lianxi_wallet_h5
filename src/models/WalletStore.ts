@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import {
   Instance,
   SnapshotIn,
@@ -35,5 +36,15 @@ export const WalletStoreModel = types
     },
     setVisibleCharge(visible: SnapshotIn<typeof self.visibleCharge>) {
       self.visibleCharge = visible;
+    },
+  }))
+  .actions((self) => ({
+    async fetch_verifyRealName(
+      name: string,
+      idCardNumber: string,
+      idCardFront: string,
+      idCardBack: string
+    ) {
+      api.verifyRealName(name, idCardNumber, idCardFront, idCardBack);
     },
   }));

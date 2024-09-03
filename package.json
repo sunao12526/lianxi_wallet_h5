@@ -13,6 +13,7 @@
     "@types/js-base64": "^3.3.1",
     "@types/pako": "^2.0.3",
     "antd-mobile": "^5.37.1",
+    "apisauce": "^3.0.1",
     "axios": "^1.7.5",
     "griffith": "^1.31.0",
     "js-md5": "^0.8.3",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/qs": "^6.9.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
