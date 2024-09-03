@@ -3,7 +3,7 @@ import { Toast, NavBar, Space, Grid, List, Radio, Popup } from "antd-mobile";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
-import { useStores } from "@/models/useStores";
+import { useStores } from "@/models";
 
 import sc_pub_buttonBg from "@/../public/buttonBg.png";
 import walletBg from "@/../public/walletBg.png";

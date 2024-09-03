@@ -6,6 +6,7 @@ import {
   getSnapshot,
   types,
 } from "mobx-state-tree";
+import { WalletModel } from "./Wallet";
 
 /**
  * Model description here for TypeScript hints.
@@ -13,6 +14,7 @@ import {
 export const WalletStoreModel = types
   .model("WalletStore")
   .props({
+    wallet: types.optional(WalletModel, {}),
     currttenYue: types.optional(types.number, 3626),
     isActivity: types.optional(types.boolean, true),
     visibleCharge: types.optional(types.boolean, false),

@@ -1,3 +1,3 @@
+export * from "./helpers/useStores";
 export * from "./RootStore";
-export * from "./useStores";
 export * from "./WalletStore";

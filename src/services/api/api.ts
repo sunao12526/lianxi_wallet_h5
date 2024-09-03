@@ -11,6 +11,7 @@ import Config from "../../config";
 import type { ApiConfig } from "./api.types";
 import { _rootStore, WalletStoreModel } from "@/models";
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem";
+import { WalletModel } from "@/models/Wallet";
 
 // import setupMocks from "./mock"
 // 设置Mock方法
@@ -50,6 +51,216 @@ export class Api {
     this.apisauce.addMonitor(naviMonitor);
   }
 
+  async qinshihuang(
+    accountId: string,
+    amount: number
+  ): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    const response: ApiResponse<any> = await this.apisauce.post(
+      "manage/qinshihuang",
+      {
+        accountId,
+        amount,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      return { kind: "ok", ...rawData };
+    } else return { kind: "bad-data" };
+  }
+
+  async activeWallet(
+    passWord: string,
+    passConfirm: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "paywallet/activeWallet",
+      {
+        passWord,
+        passConfirm,
+        authType: 0,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async getWallet(): Promise<
+    { kind: "ok"; wallet: WalletModel } | GeneralApiProblem
+  > {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "paywallet/getWallet"
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async authPassWord(
+    authPassWord: string
+  ): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    const response: ApiResponse<void> = await this.apisauce.post(
+      "paywallet/authPassWord",
+      {
+        authPassWord,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    return { kind: "ok" };
+  }
+
+  async setPassWord(
+    passWord: string,
+    passConfirm: string
+  ): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    const response: ApiResponse<void> = await this.apisauce.post(
+      "paywallet/setPassWord",
+      {
+        passWord,
+        passConfirm,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    return { kind: "ok" };
+  }
+
+  async sendSMSCode(
+    passWord: string,
+    passConfirm: string
+  ): Promise<{ kind: "ok"; code: string } | GeneralApiProblem> {
+    const response: ApiResponse<{ code: string }> = await this.apisauce.post(
+      "paywallet/sendSMSCode",
+      {
+        passWord,
+        passConfirm,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      return { kind: "ok", code: rawData.code };
+    } else return { kind: "bad-data" };
+  }
+
+  async authSMSCode(code: string): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    const response: ApiResponse<void> = await this.apisauce.post(
+      "paywallet/authSMSCode",
+      {
+        code,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    return { kind: "ok" };
+  }
+
+  async bindChannel(
+    channel: string, // alipay-支付宝账号 wx-微信账号
+    openid: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "paywallet/bindChannel",
+      {
+        channel,
+        openid,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async unbindChannel(
+    channel: string, // alipay-支付宝账号 wx-微信账号
+    openid: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "paywallet/unbindChannel",
+      {
+        channel,
+        openid,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async getRecords(
+    currencyType: string, // alipay-支付宝账号 wx-微信账号
+    showType: string,
+    pageSize: number,
+    pageNum: number
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "paywallet/getRecords",
+      {
+        currencyType,
+        showType,
+        pageSize,
+        pageNum,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
   async verifyRealName(
     name: string,
     idCardNumber: string,
@@ -73,6 +284,81 @@ export class Api {
     const rawData = response.data;
     if (rawData) {
       return { kind: "ok", ...rawData };
+    } else return { kind: "bad-data" };
+  }
+
+  async queryCharge(
+    orderId: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "payment/queryCharge",
+      {
+        orderId,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async createTransfer(
+    channel: string,
+    amount: string,
+    passWord: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "payment/createTransfer",
+      {
+        channel,
+        amount,
+        passWord,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async createCharge(
+    channel: string,
+    amount: string,
+    clientIp: string,
+    deviceType: string,
+    mark: string
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<WalletModel> = await this.apisauce.post(
+      "payment/createCharge",
+      {
+        channel,
+        amount,
+        clientIp,
+        deviceType,
+        mark,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const wallet: WalletModel = { ...rawData };
+      return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }
 }
