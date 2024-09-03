@@ -25,6 +25,7 @@ export default function Page() {
 
       <List header=" ">
         <List.Item
+          onClick={() => router.push("/wallet/walletSettleDetail")}
           extra="+345此聊豆"
           clickable
           arrowIcon={false}

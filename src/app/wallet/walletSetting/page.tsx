@@ -25,12 +25,27 @@ export default function Page() {
           extra="已认证"
           clickable
           description="管理已授权的产品和设备"
+          onClick={() => router.push("/wallet/walletRealname")}
         >
           实名认证
         </List.Item>
-        <List.Item clickable>修改支付密码</List.Item>
-        <List.Item clickable>忘记支付密码</List.Item>
-        <List.Item clickable extra="已认证">
+        <List.Item
+          clickable
+          onClick={() => router.push("/wallet/walletChangepassword")}
+        >
+          修改支付密码
+        </List.Item>
+        <List.Item
+          clickable
+          onClick={() => router.push("/wallet/walletForgetpassword")}
+        >
+          忘记支付密码
+        </List.Item>
+        <List.Item
+          clickable
+          extra="已认证"
+          onClick={() => router.push("/wallet/walletBindAlipay")}
+        >
           支付宝账号
         </List.Item>
         <List.Item
