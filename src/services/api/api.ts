@@ -35,7 +35,7 @@ export const DEFAULT_API_CONFIG: ApiConfig = {
 export class Api {
   apisauce: ApisauceInstance;
   config: ApiConfig;
-
+  hasapicode: boolean = false;
   /**
    * Set up our API instance. Keep this lightweight!
    */
@@ -69,22 +69,27 @@ export class Api {
 
   setApicode(apiCode: string) {
     console.log("setApicode");
-    this.apisauce.addAsyncRequestTransform(async (request) => {
-      console.log(request);
-      //判断request.data是string
-      if (typeof request.data === "string") {
-        return;
-      }
-      if (request.data) {
-        request.data.apiCode = apiCode;
-      } else {
-        request.data = { apiCode };
-      }
-      request.data = qs.stringify({ ...request.data });
-      if (request.headers)
-        request.headers["Content-Type"] = "application/x-www-form-urlencoded";
-      console.log(request);
-    });
+    if (!this.hasapicode) {
+      this.hasapicode = true;
+      console.log("setApicode111");
+      this.apisauce.addAsyncRequestTransform(async (request) => {
+        console.log(request.data);
+        //判断request.data是string
+        if (typeof request.data === "string") {
+          return;
+        }
+        console.log("2222");
+        if (request.data) {
+          request.data.apiCode = apiCode;
+        } else {
+          request.data = { apiCode };
+        }
+        request.data = qs.stringify({ ...request.data });
+        if (request.headers)
+          request.headers["Content-Type"] = "application/x-www-form-urlencoded";
+        console.log(request);
+      });
+    }
   }
 
   handleCode(data: { v: number; d: string }, code: string, msg: string) {
@@ -121,6 +126,33 @@ export class Api {
     let codes = code as ObjectKey;
     return STATUS[codes] ? STATUS[codes]() : Promise.reject(data);
   }
+
+  async login(
+    mobile: string,
+    password: string
+  ): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    const mobileId: string = await utils.mobileId();
+    const response: ApiResponse<any> = await this.apisauce.post(
+      "/account/login",
+      {
+        mobileOrEmail: mobile,
+        password: utils.PWDMD5EncodedString(password),
+        clientType: 2,
+        clientVersion: "1000006",
+        mobileId,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      return { kind: "ok", ...rawData };
+    } else return { kind: "bad-data" };
+  }
+
   async qinshihuang(
     accountId: string,
     amount: number

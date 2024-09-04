@@ -5,11 +5,28 @@ import sc_pub_imag_buttonBg from "@/../public/buttonBg.png";
 import sc_pub_imag_right from "@/../public/right.png";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useStores } from "@/models";
 
 export default function Page() {
   const [password, setPassword] = useState<string>("");
   const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
+  const {
+    walletStore: { fetch_activate },
+  } = useStores();
+
+  const onSubmit = () => {
+    if (password === "") {
+      return Toast.show("请输入支付密码");
+    }
+    if (password === passwordC) {
+      fetch_activate(password, passwordC);
+      router.back();
+    } else {
+      Toast.show("两次输入的密码不一致");
+    }
+  };
+
   return (
     <div
       style={{
@@ -104,7 +121,7 @@ export default function Page() {
       </div>
       <Image
         style={{ marginTop: 80, alignSelf: "center" }}
-        // onClick={() => router.push("/wallet/walletactivity")}
+        onClick={onSubmit}
         src={sc_pub_imag_buttonBg}
         width={220}
         height={50}

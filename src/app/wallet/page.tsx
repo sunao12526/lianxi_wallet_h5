@@ -352,10 +352,10 @@ export default observer(function Page() {
               marginLeft: 10,
             }}
           >
-            {currttenYue}
+            {isActivity ? currttenYue : 0}
           </div>
         </div>
-        {isActivity ? <Page_active></Page_active> : Page_no_active()}
+        {isActivity ? <Page_active /> : <Page_no_active />}
       </div>
     </div>
   );

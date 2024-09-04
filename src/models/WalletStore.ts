@@ -17,8 +17,8 @@ export const WalletStoreModel = types
   .props({
     wallet: types.optional(WalletModel, {}),
     apiCode: types.optional(types.string, ""),
-    currttenYue: types.optional(types.number, 3626),
-    isActivity: types.optional(types.boolean, true),
+    // currttenYue: types.optional(types.number, 3626),
+    // isActivity: types.optional(types.boolean, true),
     visibleCharge: types.optional(types.boolean, false),
     items: types.optional(types.array(types.string), [
       "1",
@@ -35,12 +35,12 @@ export const WalletStoreModel = types
   })
   .actions(withSetPropAction)
   .views((self) => ({
-    // get currttenYue() {
-    //   return self.wallet.cash;
-    // },
-    // get isActivity() {
-    //   return self.wallet.realityStatus === "0";
-    // },
+    get currttenYue() {
+      return self.wallet.cash;
+    },
+    get isActivity() {
+      return self.wallet.status === 1;
+    },
   }))
   .actions((self) => ({
     setCurrentItem(item: string) {
@@ -54,8 +54,18 @@ export const WalletStoreModel = types
     },
   }))
   .actions((self) => ({
+    async fetch_login() {
+      const response = await api.login("18610239072", "1234567811");
+    },
     async fetch_getWallet() {
       const response = await api.getWallet();
+      if (response.kind === "ok") {
+        self.setProp("wallet", response.wallet);
+      }
+    },
+
+    async fetch_activate(passWord: string, passConfirm: string) {
+      const response = await api.activeWallet(passWord, passConfirm);
       if (response.kind === "ok") {
         self.setProp("wallet", response.wallet);
       }
