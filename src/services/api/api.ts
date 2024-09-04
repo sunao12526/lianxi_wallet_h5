@@ -71,6 +71,10 @@ export class Api {
     console.log("setApicode");
     this.apisauce.addAsyncRequestTransform(async (request) => {
       console.log(request);
+      //判断request.data是string
+      if (typeof request.data === "string") {
+        return;
+      }
       if (request.data) {
         request.data.apiCode = apiCode;
       } else {
@@ -166,9 +170,8 @@ export class Api {
   async getWallet(): Promise<
     { kind: "ok"; wallet: WalletModel } | GeneralApiProblem
   > {
-    const response: ApiResponse<WalletModel> = await this.apisauce.post(
-      "paywallet/getWallet"
-    );
+    const response: ApiResponse<{ wallet: WalletModel }> =
+      await this.apisauce.post("paywallet/getWallet");
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
@@ -176,7 +179,7 @@ export class Api {
     }
     const rawData = response.data;
     if (rawData) {
-      const wallet: WalletModel = { ...rawData };
+      const wallet: WalletModel = rawData.wallet;
       return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }

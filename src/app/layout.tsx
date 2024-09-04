@@ -43,6 +43,9 @@ export default observer(function RootLayout({
     walletStore: { apiCode, setIsApiCode },
   } = useStores();
   useEffect(() => {
+    console.log("start");
+    setIsApiCode("Y9igFx7miVkOVyhisd0bbuRZFq4GcvWW");
+    api.setApicode("Y9igFx7miVkOVyhisd0bbuRZFq4GcvWW");
     // 调用原生方法
     setupWebViewJavascriptBridge(function (bridge: any) {
       // bridge.registerHandler("JS Echo", function (data, responseCallback) {

@@ -7,6 +7,7 @@ import {
   types,
 } from "mobx-state-tree";
 import { WalletModel } from "./Wallet";
+import { withSetPropAction } from "./helpers/withSetPropAction";
 
 /**
  * Model description here for TypeScript hints.
@@ -32,12 +33,20 @@ export const WalletStoreModel = types
       "1"
     ),
   })
-  .views((self) => ({}))
+  .actions(withSetPropAction)
+  .views((self) => ({
+    // get currttenYue() {
+    //   return self.wallet.cash;
+    // },
+    // get isActivity() {
+    //   return self.wallet.realityStatus === "0";
+    // },
+  }))
   .actions((self) => ({
-    setCurrentItem(item: SnapshotIn<typeof self.currentItem>) {
+    setCurrentItem(item: string) {
       self.currentItem = item;
     },
-    setVisibleCharge(visible: SnapshotIn<typeof self.visibleCharge>) {
+    setVisibleCharge(visible: boolean) {
       self.visibleCharge = visible;
     },
     setIsApiCode(apiCode: string) {
@@ -46,7 +55,10 @@ export const WalletStoreModel = types
   }))
   .actions((self) => ({
     async fetch_getWallet() {
-      const res = await api.getWallet();
+      const response = await api.getWallet();
+      if (response.kind === "ok") {
+        self.setProp("wallet", response.wallet);
+      }
     },
     async fetch_verifyRealName(
       name: string,
