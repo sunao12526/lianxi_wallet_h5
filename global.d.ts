@@ -1,0 +1,1 @@
+declare var WebViewJavascriptBridge: any;

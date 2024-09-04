@@ -12,6 +12,9 @@ import type { ApiConfig } from "./api.types";
 import { _rootStore, WalletStoreModel } from "@/models";
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem";
 import { WalletModel } from "@/models/Wallet";
+import qs from "qs";
+import { Toast } from "antd-mobile";
+import utils from "@/utils/utils";
 
 // import setupMocks from "./mock"
 // 设置Mock方法
@@ -45,12 +48,75 @@ export class Api {
         Accept: "application/json",
       },
     });
+    // const naviMonitor = (response: any) =>
+    //   console.log("hey!  listen! ", response);
+    // this.apisauce.addMonitor(naviMonitor);
 
-    const naviMonitor = (response: any) =>
-      console.log("hey!  listen! ", response);
-    this.apisauce.addMonitor(naviMonitor);
+    this.apisauce.addAsyncResponseTransform(async (response) => {
+      //成功请求到数据
+      {
+        const { data } = response;
+        console.log("响应原始data");
+        console.log(data);
+      }
+      let { data, code, msg } = response.data;
+      let dataString = await this.handleCode(data, code, msg);
+      response.data = utils.getObjectFromJson(dataString);
+      console.log("最终响应");
+      console.log(response.data);
+    });
   }
 
+  setApicode(apiCode: string) {
+    console.log("setApicode");
+    this.apisauce.addAsyncRequestTransform(async (request) => {
+      console.log(request);
+      if (request.data) {
+        request.data.apiCode = apiCode;
+      } else {
+        request.data = { apiCode };
+      }
+      request.data = qs.stringify({ ...request.data });
+      if (request.headers)
+        request.headers["Content-Type"] = "application/x-www-form-urlencoded";
+      console.log(request);
+    });
+  }
+
+  handleCode(data: { v: number; d: string }, code: string, msg: string) {
+    const STATUS = {
+      "200"() {
+        if (data.v === 0) {
+          return data.d;
+        }
+        return utils.unzip(data.d);
+      },
+      "-1"() {
+        Toast.show(msg);
+        return Promise.reject({ code, msg });
+      },
+      "400"() {
+        Toast.show("请求错误");
+        return Promise.reject({ code, msg: "请求错误" });
+      },
+      "401"() {
+        Toast.show("未授权请求!");
+        return Promise.reject({ code, msg: "未授权请求!" });
+      },
+      "403"() {
+        Toast.show("拒绝请求");
+        return Promise.reject({ code, msg: "拒绝请求" });
+      },
+      "500"() {
+        Toast.show("服务器错误");
+        return Promise.reject({ code, msg: "服务器错误" });
+      },
+    };
+
+    type ObjectKey = keyof typeof STATUS;
+    let codes = code as ObjectKey;
+    return STATUS[codes] ? STATUS[codes]() : Promise.reject(data);
+  }
   async qinshihuang(
     accountId: string,
     amount: number

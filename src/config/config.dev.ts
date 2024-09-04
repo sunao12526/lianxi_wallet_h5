@@ -6,8 +6,8 @@
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
 const config = {
-  URL: "https://app.lianxi.com/",
-  API_URL: "https://app.lianxi.com/",
+  URL: "https://testapp.lianxi.com/",
+  API_URL: "https://testapp.lianxi.com/",
 };
 
 export default config;

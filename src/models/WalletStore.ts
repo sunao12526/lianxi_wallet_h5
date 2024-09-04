@@ -15,6 +15,7 @@ export const WalletStoreModel = types
   .model("WalletStore")
   .props({
     wallet: types.optional(WalletModel, {}),
+    apiCode: types.optional(types.string, ""),
     currttenYue: types.optional(types.number, 3626),
     isActivity: types.optional(types.boolean, true),
     visibleCharge: types.optional(types.boolean, false),
@@ -39,8 +40,14 @@ export const WalletStoreModel = types
     setVisibleCharge(visible: SnapshotIn<typeof self.visibleCharge>) {
       self.visibleCharge = visible;
     },
+    setIsApiCode(apiCode: string) {
+      self.apiCode = apiCode;
+    },
   }))
   .actions((self) => ({
+    async fetch_getWallet() {
+      const res = await api.getWallet();
+    },
     async fetch_verifyRealName(
       name: string,
       idCardNumber: string,

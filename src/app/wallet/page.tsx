@@ -12,6 +12,7 @@ import sc_pub_imag_right from "@/../public/right.png";
 import sc_pub_chargeBt from "@/../public/chargeBt.png";
 import sc_pub_zhifubao from "@/../public/zhifubao.png";
 import sc_pub_weixin from "@/../public/weixin.png";
+import { useEffect } from "react";
 
 function Page_no_active() {
   const router = useRouter();
@@ -279,18 +280,25 @@ const Page_active = observer(function Page_active() {
   );
 });
 
-export default function Page() {
+export default observer(function Page() {
   const router = useRouter();
   const {
-    walletStore: { currttenYue, isActivity },
+    walletStore: { currttenYue, isActivity, fetch_getWallet, apiCode },
   } = useStores();
+  useEffect(() => {
+    console.log("qqqq11");
+    console.log(apiCode);
+    if (apiCode) {
+      fetch_getWallet();
+    }
+  }, [fetch_getWallet, apiCode]);
   return (
     <div>
       <NavBar
         style={{ background: "white", height: 64 }}
         onBack={() => {
           // 调用原生方法
-          (window as any).webkit.messageHandlers.event.postMessage("goBack");
+          WebViewJavascriptBridge.callHandler("ObjC_method_goBack", null, null);
         }}
         right={
           <div
@@ -351,4 +359,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
+});
