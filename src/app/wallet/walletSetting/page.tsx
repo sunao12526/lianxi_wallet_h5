@@ -1,13 +1,14 @@
 "use client";
-import { Toast, NavBar, List } from "antd-mobile";
+import { useStores } from "@/models";
+import { NavBar, List } from "antd-mobile";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export default function Page() {
+export default observer(function Page() {
   const router = useRouter();
-  useEffect(() => {
-    console.log("www");
-  }, []);
+  const {
+    walletStore: { isBindAlipay },
+  } = useStores();
   return (
     <div
       style={{
@@ -47,7 +48,7 @@ export default function Page() {
         </List.Item>
         <List.Item
           clickable
-          extra="已认证"
+          extra={isBindAlipay ? "已添加" : "未添加"}
           onClick={() => router.push("/wallet/walletBindAlipay")}
         >
           支付宝账号
@@ -68,4 +69,4 @@ export default function Page() {
       </List>
     </div>
   );
-}
+});

@@ -1,12 +1,18 @@
 "use client";
-import { Input, Toast, Button, Space, NavBar, List, Switch } from "antd-mobile";
-import { useState } from "react";
+import { NavBar, List, Result } from "antd-mobile";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useStores } from "@/models";
 
 export default function Page() {
-  const [password, setPassword] = useState<string>("");
-  const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
+  const {
+    walletStore: { fetch_getRecords, walletSettleList },
+  } = useStores();
+  useEffect(() => {
+    fetch_getRecords(2);
+  }, [fetch_getRecords]);
+
   return (
     <div
       style={{
@@ -17,39 +23,37 @@ export default function Page() {
       }}
     >
       <NavBar
+        className="shadow-md"
         style={{ background: "white", height: 64 }}
         onBack={() => router.back()}
       >
         结算记录
       </NavBar>
-
-      <List header=" ">
-        <List.Item
-          onClick={() => router.push("/wallet/walletSettleDetail")}
-          extra="+345此聊豆"
-          clickable
-          arrowIcon={false}
-          description="2019-09-01"
-        >
-          充值
-        </List.Item>
-        <List.Item
-          extra="-345此聊豆"
-          clickable
-          arrowIcon={false}
-          description="2019-09-01"
-        >
-          提现
-        </List.Item>
-        <List.Item
-          extra="+345此聊豆"
-          clickable
-          arrowIcon={false}
-          description="2019-09-01"
-        >
-          提现
-        </List.Item>
-      </List>
+      {walletSettleList.length === 0 ? (
+        <Result
+          className="mt-20"
+          status="info"
+          title="暂无数据"
+          description="没有找到你需要的数据"
+        />
+      ) : (
+        <List header=" ">
+          {walletSettleList.map((item) => (
+            <List.Item
+              key={item.orderId}
+              extra={
+                (item.afterValue >= item.beforeValue ? "+" : "-") +
+                `${item.currencyValue}${item.currencyName}`
+              }
+              clickable
+              arrowIcon={false}
+              description={item.createTime}
+            >
+              {item.subject}
+            </List.Item>
+          ))}
+        </List>
+      )}
     </div>
   );
 }

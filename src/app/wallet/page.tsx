@@ -13,6 +13,7 @@ import sc_pub_chargeBt from "@/../public/chargeBt.png";
 import sc_pub_zhifubao from "@/../public/zhifubao.png";
 import sc_pub_weixin from "@/../public/weixin.png";
 import { useEffect } from "react";
+import { number } from "mobx-state-tree/dist/internal";
 
 function Page_no_active() {
   const router = useRouter();
@@ -74,6 +75,12 @@ const Page_active = observer(function Page_active() {
       setCurrentItem,
       visibleCharge,
       setVisibleCharge,
+      isAgreeCharge,
+      setAgreeCharge,
+      confirmCharge,
+      payType,
+      setPayType,
+      fetch_qinshihuang,
     },
   } = useStores();
 
@@ -166,7 +173,14 @@ const Page_active = observer(function Page_active() {
             "--border-top": "0px ",
           }}
         >
-          <List.Item prefix={<Radio>已阅读并同意</Radio>} clickable>
+          <List.Item
+            prefix={
+              <Radio checked={isAgreeCharge} onClick={setAgreeCharge}>
+                已阅读并同意
+              </Radio>
+            }
+            clickable
+          >
             <div style={{ color: "#6A70F8" }}>《用户充值协议》</div>
           </List.Item>
         </List>
@@ -185,9 +199,7 @@ const Page_active = observer(function Page_active() {
         </List>
         <Image
           style={{ marginTop: 50, marginLeft: 20 }}
-          onClick={() => {
-            setVisibleCharge(true);
-          }}
+          onClick={confirmCharge}
           src={sc_pub_chargeBt}
           width={window.innerWidth - 20 * 2}
           alt=""
@@ -201,9 +213,6 @@ const Page_active = observer(function Page_active() {
         }}
         visible={visibleCharge}
         onMaskClick={() => {
-          setVisibleCharge(false);
-        }}
-        onClose={() => {
           setVisibleCharge(false);
         }}
       >
@@ -243,11 +252,11 @@ const Page_active = observer(function Page_active() {
           >
             <List.Item
               prefix={<Image src={sc_pub_zhifubao} width={40} alt="" />}
-              extra={<Radio></Radio>}
+              extra={<Radio checked={payType === "支付宝"} />}
               arrowIcon={false}
-              onClick={() => {}}
+              onClick={() => setPayType("支付宝")}
             >
-              账单
+              支付宝支付
             </List.Item>
           </List>
           <List
@@ -260,16 +269,19 @@ const Page_active = observer(function Page_active() {
           >
             <List.Item
               prefix={<Image src={sc_pub_weixin} width={40} alt="" />}
-              extra={<Radio></Radio>}
+              extra={<Radio checked={payType === "微信"} />}
               arrowIcon={false}
-              onClick={() => {}}
+              onClick={() => setPayType("微信")}
             >
               微信支付
             </List.Item>
           </List>
           <Image
             style={{ marginTop: 20, marginLeft: 20 }}
-            onClick={() => {}}
+            onClick={() => {
+              fetch_qinshihuang(Number(currentItem) * 7 * 10);
+              setVisibleCharge(false);
+            }}
             src={sc_pub_chargeBt}
             width={window.innerWidth - 20 * 2}
             alt=""

@@ -15,6 +15,7 @@ import { WalletModel } from "@/models/Wallet";
 import qs from "qs";
 import { Toast } from "antd-mobile";
 import utils from "@/utils/utils";
+import { WalletRecord } from "@/models/WalletRecord";
 
 // import setupMocks from "./mock"
 // 设置Mock方法
@@ -154,16 +155,14 @@ export class Api {
   }
 
   async qinshihuang(
-    accountId: string,
+    accountId: number,
     amount: number
-  ): Promise<{ kind: "ok" } | GeneralApiProblem> {
-    const response: ApiResponse<any> = await this.apisauce.post(
-      "manage/qinshihuang",
-      {
+  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
+    const response: ApiResponse<{ wallet: WalletModel }> =
+      await this.apisauce.post("manage/qinshihuang", {
         accountId,
         amount,
-      }
-    );
+      });
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
@@ -171,7 +170,8 @@ export class Api {
     }
     const rawData = response.data;
     if (rawData) {
-      return { kind: "ok", ...rawData };
+      const wallet: WalletModel = rawData.wallet;
+      return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }
 
@@ -179,14 +179,12 @@ export class Api {
     passWord: string,
     passConfirm: string
   ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
-    const response: ApiResponse<WalletModel> = await this.apisauce.post(
-      "paywallet/activeWallet",
-      {
+    const response: ApiResponse<{ wallet: WalletModel }> =
+      await this.apisauce.post("paywallet/activeWallet", {
         passWord,
         passConfirm,
         authType: 0,
-      }
-    );
+      });
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
@@ -194,7 +192,7 @@ export class Api {
     }
     const rawData = response.data;
     if (rawData) {
-      const wallet: WalletModel = { ...rawData };
+      const wallet: WalletModel = rawData.wallet;
       return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }
@@ -290,16 +288,14 @@ export class Api {
   }
 
   async bindChannel(
-    channel: string, // alipay-支付宝账号 wx-微信账号
+    channel: "alipay" | "wx",
     openid: string
   ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
-    const response: ApiResponse<WalletModel> = await this.apisauce.post(
-      "paywallet/bindChannel",
-      {
+    const response: ApiResponse<{ wallet: WalletModel }> =
+      await this.apisauce.post("paywallet/bindChannel", {
         channel,
         openid,
-      }
-    );
+      });
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
@@ -307,22 +303,20 @@ export class Api {
     }
     const rawData = response.data;
     if (rawData) {
-      const wallet: WalletModel = { ...rawData };
+      const wallet: WalletModel = rawData.wallet;
       return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }
 
   async unbindChannel(
-    channel: string, // alipay-支付宝账号 wx-微信账号
+    channel: "alipay" | "wx",
     openid: string
   ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
-    const response: ApiResponse<WalletModel> = await this.apisauce.post(
-      "paywallet/unbindChannel",
-      {
+    const response: ApiResponse<{ wallet: WalletModel }> =
+      await this.apisauce.post("paywallet/unbindChannel", {
         channel,
         openid,
-      }
-    );
+      });
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
@@ -330,35 +324,37 @@ export class Api {
     }
     const rawData = response.data;
     if (rawData) {
-      const wallet: WalletModel = { ...rawData };
+      const wallet: WalletModel = rawData.wallet;
       return { kind: "ok", wallet };
     } else return { kind: "bad-data" };
   }
 
   async getRecords(
-    currencyType: string, // alipay-支付宝账号 wx-微信账号
-    showType: string,
-    pageSize: number,
-    pageNum: number
-  ): Promise<{ kind: "ok"; wallet: WalletModel } | GeneralApiProblem> {
-    const response: ApiResponse<WalletModel> = await this.apisauce.post(
-      "paywallet/getRecords",
-      {
-        currencyType,
+    showType: 0 | 1 | 2 = 1,
+    pageNum: number = 1,
+    pageSize: number = 100
+  ): Promise<{ kind: "ok"; records: WalletRecord[] } | GeneralApiProblem> {
+    const response: ApiResponse<{ records: WalletRecord[] }> =
+      await this.apisauce.post("paywallet/getRecords", {
+        currencyType: 2,
         showType,
         pageSize,
         pageNum,
-      }
-    );
+      });
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response);
       if (problem) return problem;
     }
-    const rawData = response.data;
+
+    const rawData = response.data?.records;
     if (rawData) {
-      const wallet: WalletModel = { ...rawData };
-      return { kind: "ok", wallet };
+      // This is where we transform the data into the shape we expect for our MST model.
+      const records: WalletRecord[] =
+        rawData?.map((raw: any) => ({
+          ...raw,
+        })) ?? [];
+      return { kind: "ok", records };
     } else return { kind: "bad-data" };
   }
 

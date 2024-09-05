@@ -1,13 +1,14 @@
 "use client";
-import { Input, Toast, Button, Space, NavBar } from "antd-mobile";
+import { Input, Toast, Space, NavBar } from "antd-mobile";
 import Image from "next/image";
+import { useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useRouter } from "next/navigation";
 import sc_pub_imag_buttonBg from "@/../public/buttonBg.png";
 import sc_pub_imag_right from "@/../public/right.png";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useStores } from "@/models";
 
-export default function Page() {
+export default observer(function Page() {
   const [password, setPassword] = useState<string>("");
   const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
@@ -129,4 +130,4 @@ export default function Page() {
       />
     </div>
   );
-}
+});
