@@ -295,7 +295,13 @@ const Page_active = observer(function Page_active() {
 export default observer(function Page() {
   const router = useRouter();
   const {
-    walletStore: { currttenYue, isActivity, fetch_getWallet, apiCode },
+    walletStore: {
+      currttenYue,
+      isActivity,
+      fetch_getWallet,
+      apiCode,
+      fetch_getMobilePerson,
+    },
   } = useStores();
   useEffect(() => {
     console.log("qqqq11");

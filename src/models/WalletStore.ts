@@ -10,6 +10,7 @@ import { api } from "@/services/api";
 import { withSetPropAction } from "./helpers/withSetPropAction";
 import { WalletRecord } from "./WalletRecord";
 import { WalletModel } from "./Wallet";
+import { AccountModel } from "./Account";
 /**
  * Model description here for TypeScript hints.
  */
@@ -18,6 +19,7 @@ export const WalletStoreModel = types
   .props({
     wallet: types.optional(WalletModel, {}),
     apiCode: types.optional(types.string, ""),
+    loginAccount: types.optional(AccountModel, {}),
     // 充值记录
     walletRecordList: types.array(WalletRecord),
     // 结算记录
@@ -92,6 +94,7 @@ export const WalletStoreModel = types
       const response = await api.getWallet();
       if (response.kind === "ok") {
         self.setProp("wallet", response.wallet);
+        this.fetch_getMobilePerson(response.wallet.accountId);
       }
     },
     async fetch_activate(passWord: string, passConfirm: string) {
@@ -149,6 +152,43 @@ export const WalletStoreModel = types
         Toast.show("解除绑定成功");
       } else {
         Toast.show("解除绑定失败");
+      }
+    },
+
+    async fetch_sendSMSCode() {
+      const response = await api.sendSMSCode();
+      if (response.kind === "ok") {
+        console.log(response.code);
+        Toast.show("发送成功");
+      } else {
+        Toast.show("发送失败");
+      }
+    },
+
+    async fetch_getMobilePerson(showAccountId: number) {
+      const response = await api.getMobilePerson(showAccountId);
+      if (response.kind === "ok") {
+        self.setProp("loginAccount", response.account);
+      }
+    },
+
+    async fetch_authSMSCode(code: string) {
+      const response = await api.authSMSCode(code);
+      if (response.kind === "ok") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    async fetch_setPassWord(passWord: string, passConfirm: string) {
+      const response = await api.setPassWord(passWord, passConfirm);
+      if (response.kind === "ok") {
+        Toast.show("修改成功");
+        return true;
+      } else {
+        Toast.show("修改失败");
+        return false;
       }
     },
   }));

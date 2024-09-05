@@ -16,6 +16,7 @@ import qs from "qs";
 import { Toast } from "antd-mobile";
 import utils from "@/utils/utils";
 import { WalletRecord } from "@/models/WalletRecord";
+import { AccountModel } from "@/models/Account";
 
 // import setupMocks from "./mock"
 // 设置Mock方法
@@ -60,6 +61,7 @@ export class Api {
         console.log("响应原始data");
         console.log(data);
       }
+      if (!response.data) return;
       let { data, code, msg } = response.data;
       let dataString = await this.handleCode(data, code, msg);
       response.data = utils.getObjectFromJson(dataString);
@@ -250,16 +252,11 @@ export class Api {
     return { kind: "ok" };
   }
 
-  async sendSMSCode(
-    passWord: string,
-    passConfirm: string
-  ): Promise<{ kind: "ok"; code: string } | GeneralApiProblem> {
+  async sendSMSCode(): Promise<
+    { kind: "ok"; code: string } | GeneralApiProblem
+  > {
     const response: ApiResponse<{ code: string }> = await this.apisauce.post(
-      "paywallet/sendSMSCode",
-      {
-        passWord,
-        passConfirm,
-      }
+      "paywallet/sendSMSCode"
     );
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -456,6 +453,27 @@ export class Api {
     if (rawData) {
       const wallet: WalletModel = { ...rawData };
       return { kind: "ok", wallet };
+    } else return { kind: "bad-data" };
+  }
+
+  async getMobilePerson(
+    showAccountId: number
+  ): Promise<{ kind: "ok"; account: AccountModel } | GeneralApiProblem> {
+    const response: ApiResponse<AccountModel> = await this.apisauce.post(
+      "account/getMobilePerson",
+      {
+        showAccountId,
+      }
+    );
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const account: AccountModel = { ...rawData };
+      return { kind: "ok", account };
     } else return { kind: "bad-data" };
   }
 }
