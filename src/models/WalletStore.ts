@@ -182,12 +182,31 @@ export const WalletStoreModel = types
     },
 
     async fetch_setPassWord(passWord: string, passConfirm: string) {
+      const passwordReg = /^.{6,6}$/;
+      if (!passwordReg.test(passWord) || !passwordReg.test(passConfirm)) {
+        return Toast.show("请输入6位密码");
+      }
       const response = await api.setPassWord(passWord, passConfirm);
       if (response.kind === "ok") {
         Toast.show("修改成功");
         return true;
       } else {
         Toast.show("修改失败");
+        return false;
+      }
+    },
+
+    async fetch_authPassWord(passWord: string) {
+      if (passWord.length < 6) {
+        Toast.show("密码长度不能小于6位");
+        return false;
+      }
+      const response = await api.authPassWord(passWord);
+      if (response.kind === "ok") {
+        Toast.show("验证成功");
+        return true;
+      } else {
+        Toast.show("验证失败");
         return false;
       }
     },

@@ -1,5 +1,4 @@
 "use client";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { useEffect } from "react";
@@ -8,11 +7,6 @@ import { useStores } from "@/models";
 import { api } from "@/services/api";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// export const metadata: Metadata = {
-//   title: "友接接",
-//   description: "友接接",
-// };
 
 /**
  * 设置 WebViewJavascriptBridge 桥接
@@ -67,6 +61,15 @@ export default observer(function RootLayout({
   }, [setIsApiCode]);
   return (
     <html lang="en">
+      <head>
+        <title>友接接</title>
+        <meta name="description" content="友接接" />
+        <meta name="keywords" content="友接接" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+        />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

@@ -1,34 +1,21 @@
 "use client";
-import { Input, Toast, Space, NavBar } from "antd-mobile";
+import { Input, NavBar } from "antd-mobile";
 import Image from "next/image";
+import sc_pub_imag_doneBt from "@/../public/doneBt.png";
 import { useState } from "react";
-import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import sc_pub_imag_buttonBg from "@/../public/buttonBg.png";
-import sc_pub_imag_right from "@/../public/right.png";
 import { useStores } from "@/models";
 
-export default observer(function Page() {
+export default function Page() {
   const [password, setPassword] = useState<string>("");
   const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
   const {
-    walletStore: { fetch_activate },
+    walletStore: { fetch_setPassWord },
   } = useStores();
-
-  const passwordReg = /^.{6,6}$/;
-  const onSubmit = () => {
-    if (!passwordReg.test(password) || !passwordReg.test(passwordC)) {
-      return Toast.show("请输入6位支付密码");
-    }
-    if (password === passwordC) {
-      fetch_activate(password, passwordC);
-      router.back();
-    } else {
-      Toast.show("两次输入的密码不一致");
-    }
+  const onSubmit = async () => {
+    await fetch_setPassWord(password, passwordC);
   };
-
   return (
     <div
       style={{
@@ -40,22 +27,9 @@ export default observer(function Page() {
     >
       <NavBar
         style={{ background: "white", height: 64 }}
-        right={
-          <div style={{ marginRight: 15 }}>
-            <Space>
-              <Image
-                src={sc_pub_imag_right}
-                alt=""
-                onClick={() => {
-                  router.push("/wallet/walletSetting");
-                }}
-              />
-            </Space>
-          </div>
-        }
         onBack={() => router.back()}
       >
-        激活钱包
+        设置支付密码121212
       </NavBar>
 
       <div style={{ background: "white", marginTop: 20 }}>
@@ -122,13 +96,12 @@ export default observer(function Page() {
         ></div>
       </div>
       <Image
-        style={{ marginTop: 80, alignSelf: "center" }}
+        style={{ marginTop: 50, alignSelf: "center" }}
         onClick={onSubmit}
-        src={sc_pub_imag_buttonBg}
-        width={220}
-        height={50}
+        src={sc_pub_imag_doneBt}
+        width={window.innerWidth - 10 * 2}
         alt=""
       />
     </div>
   );
-});
+}

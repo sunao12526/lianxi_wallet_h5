@@ -217,12 +217,12 @@ export class Api {
   }
 
   async authPassWord(
-    authPassWord: string
+    passWord: string
   ): Promise<{ kind: "ok" } | GeneralApiProblem> {
     const response: ApiResponse<void> = await this.apisauce.post(
       "paywallet/authPassWord",
       {
-        authPassWord,
+        passWord,
       }
     );
     // the typical ways to die when calling an api

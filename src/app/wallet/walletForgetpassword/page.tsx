@@ -36,19 +36,19 @@ export default observer(function Page() {
     restart(time, true);
   };
 
-  //写一个正则表达式任意字符串长度8-20
-  const passwordReg = /^.{8,20}$/;
+  //写一个正则表达式任意字符串长度只能是6位
+  const passwordReg = /^.{6,6}$/;
   const onSubmit = async () => {
-    if (!passwordReg.test(password)) {
-      return Toast.show("请输入8-20个字符的密码");
+    if (!passwordReg.test(password) || !passwordReg.test(passwordC)) {
+      return Toast.show("请输入6位密码");
     }
     if (safeCode === "") {
       return Toast.show("请输入短信验证码");
     }
     const res = await fetch_authSMSCode(safeCode);
     if (res) {
-      await fetch_setPassWord(password, passwordC);
-      router.back();
+      const res = await fetch_setPassWord(password, passwordC);
+      if (res) router.back();
     }
   };
 
