@@ -46,50 +46,51 @@ export class Api {
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
-      headers: {
-        Accept: "application/json",
-      },
+      // headers: {
+      //   Accept: "application/json",
+      // },
     });
+
     // const naviMonitor = (response: any) =>
     //   console.log("hey!  listen! ", response);
     // this.apisauce.addMonitor(naviMonitor);
 
     this.apisauce.addAsyncResponseTransform(async (response) => {
       //成功请求到数据
-      {
-        const { data } = response;
-        console.log("响应原始data");
-        console.log(data);
-      }
+      console.log("原始响应");
+      console.log(response);
       if (!response.data) return;
       let { data, code, msg } = response.data;
       let dataString = await this.handleCode(data, code, msg);
       response.data = utils.getObjectFromJson(dataString);
       console.log("最终响应");
-      console.log(response.data);
+      console.log(response);
     });
   }
 
   setApicode(apiCode: string) {
     console.log("setApicode");
     if (!this.hasapicode) {
+      console.log("setApicode___");
       this.hasapicode = true;
-      console.log("setApicode111");
       this.apisauce.addAsyncRequestTransform(async (request) => {
-        console.log(request.data);
-        //判断request.data是string
-        if (typeof request.data === "string") {
-          return;
-        }
-        console.log("2222");
-        if (request.data) {
-          request.data.apiCode = apiCode;
-        } else {
-          request.data = { apiCode };
-        }
-        request.data = qs.stringify({ ...request.data });
-        if (request.headers)
+        console.log("原始request");
+        console.log(request);
+        // 设置header
+        if (request.headers) {
           request.headers["Content-Type"] = "application/x-www-form-urlencoded";
+        }
+        // 设置data
+        if (request.url?.indexOf("file/upload") === -1) {
+          if (typeof request.data === "string") return;
+          if (request.data) {
+            request.data.apiCode = apiCode;
+          } else {
+            request.data = { apiCode };
+          }
+          request.data = qs.stringify({ ...request.data });
+        }
+        console.log("最终request");
         console.log(request);
       });
     }
@@ -474,6 +475,29 @@ export class Api {
     if (rawData) {
       const account: AccountModel = { ...rawData };
       return { kind: "ok", account };
+    } else return { kind: "bad-data" };
+  }
+
+  async uploadImage(
+    file: File
+  ): Promise<{ kind: "ok"; filePath: string } | GeneralApiProblem> {
+    const data: FormData = new FormData();
+    data.append("file", file);
+    data.append("uploadModule", "2");
+    data.append("originalFlag", "1");
+    data.append("uploadType", "1");
+    data.append("clientType", "2");
+    const response: ApiResponse<{ filePath: string }> =
+      await this.apisauce.post("file/upload", data);
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response);
+      if (problem) return problem;
+    }
+    const rawData = response.data;
+    if (rawData) {
+      const filePath: string = rawData.filePath;
+      return { kind: "ok", filePath };
     } else return { kind: "bad-data" };
   }
 }

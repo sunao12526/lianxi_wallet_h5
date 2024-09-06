@@ -1,13 +1,13 @@
 "use client";
 import { useStores } from "@/models";
-import { NavBar, List } from "antd-mobile";
+import { NavBar, List, Form } from "antd-mobile";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 
 export default observer(function Page() {
   const router = useRouter();
   const {
-    walletStore: { isBindAlipay },
+    walletStore: { isBindAlipay, realityStatusInfo, realityStatusValue },
   } = useStores();
   return (
     <div
@@ -27,13 +27,14 @@ export default observer(function Page() {
 
       <List header=" ">
         <List.Item
-          extra="已认证"
+          extra={realityStatusValue}
           clickable
-          description="管理已授权的产品和设备"
           onClick={() => router.push("/wallet/walletRealname")}
         >
           实名认证
         </List.Item>
+      </List>
+      <List header={realityStatusInfo}>
         <List.Item
           clickable
           onClick={() => router.push("/wallet/walletChangepassword")}

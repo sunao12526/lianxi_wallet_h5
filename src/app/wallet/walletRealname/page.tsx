@@ -3,29 +3,24 @@ import {
   Input,
   Toast,
   Button,
-  Space,
   NavBar,
-  List,
   Form,
   ImageUploader,
   ImageUploadItem,
   Grid,
 } from "antd-mobile";
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
 import sc_pub_imag_ps_sfz_z from "@/../public/ps_sfz_z.png";
 import sc_pub_imag_ps_sfz_f from "@/../public/ps_sfz_f.png";
 import sc_pub_imag_sfz_z from "@/../public/sfz_z.png";
 import sc_pub_imag_sfz_f from "@/../public/sfz_f.png";
 import sc_pub_imag_sfz_close from "@/../public/sfz_close.png";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useTimer } from "react-timer-hook";
-import utils from "@/utils/utils";
-import { AxiosResponse } from "axios";
-import httpRequest from "@/utils/httpRequest";
 import { useStores } from "@/models";
-export default function Page() {
+
+export default observer(function Page() {
   const [imgFile, setimgFile] = useState<string>("");
   const [file, setfile] = useState<File>();
   const [imgFilef, setimgFilef] = useState<string>("");
@@ -36,11 +31,10 @@ export default function Page() {
   } = useStores();
 
   const onSubmit = async ({ name, num }: { name: string; num: string }) => {
-    if (imgFile === "" || imgFilef === "") {
-      return Toast.show("请输入完整信息！");
+    const res = await fetch_verifyRealName(name, num, file, filef);
+    if (res) {
+      router.back();
     }
-    console.log(name);
-    console.log(num);
   };
 
   const mockUpload = async (file: File) => {
@@ -50,13 +44,13 @@ export default function Page() {
       setimgFile(reader.result as string);
       setfile(file);
     };
-
     const imageItem: ImageUploadItem = {
       key: "",
       url: "",
     };
     return imageItem;
   };
+
   const mockUploadf = async (file: File) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -64,7 +58,6 @@ export default function Page() {
       setimgFilef(reader.result as string);
       setfilef(file);
     };
-
     const imageItem: ImageUploadItem = {
       key: "",
       url: "",
@@ -238,4 +231,4 @@ export default function Page() {
       </Form>
     </div>
   );
-}
+});

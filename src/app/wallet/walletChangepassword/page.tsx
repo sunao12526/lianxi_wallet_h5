@@ -6,8 +6,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import OtpInput from "react-otp-input";
 import { useStores } from "@/models";
+import { observer } from "mobx-react-lite";
 
-export default function Page() {
+export default observer(function Page() {
   const [safeCode, setSafeCode] = useState<string>("");
   const router = useRouter();
   const {
@@ -79,4 +80,4 @@ export default function Page() {
       />
     </div>
   );
-}
+});

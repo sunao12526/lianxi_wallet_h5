@@ -11,6 +11,7 @@ import { withSetPropAction } from "./helpers/withSetPropAction";
 import { WalletRecord } from "./WalletRecord";
 import { WalletModel } from "./Wallet";
 import { AccountModel } from "./Account";
+import httpRequest from "@/utils/httpRequest";
 /**
  * Model description here for TypeScript hints.
  */
@@ -59,6 +60,36 @@ export const WalletStoreModel = types
     get isBindAlipay() {
       return self.wallet.alipayId !== "";
     },
+    get realityStatusValue() {
+      if (self.wallet.realityStatus === 1) {
+        return "";
+      } else if (self.wallet.realityStatus === 2) {
+        return "认证中";
+      } else if (self.wallet.realityStatus === 3) {
+        return "已认证";
+      } else if (self.wallet.realityStatus === -1) {
+        return "认证失败";
+      } else if (self.wallet.realityStatus === -2) {
+        return "认证失败";
+      } else {
+        return "";
+      }
+    },
+    get realityStatusInfo() {
+      if (self.wallet.realityStatus === 1) {
+        return "你还未进行实名认证，认证通过后才能进行提现。";
+      } else if (self.wallet.realityStatus === 2) {
+        return "你还未进行实名认证，认证通过后才能进行提现。";
+      } else if (self.wallet.realityStatus === 3) {
+        return "你已进行实名认证。";
+      } else if (self.wallet.realityStatus === -1) {
+        return "你还未进行实名认证，认证通过后才能进行提现。";
+      } else if (self.wallet.realityStatus === -2) {
+        return "你还未进行实名认证，认证通过后才能进行提现。";
+      } else {
+        return "你还未进行实名认证，认证通过后才能进行提现。";
+      }
+    },
   }))
   .actions((self) => ({
     // 支付方式
@@ -106,10 +137,48 @@ export const WalletStoreModel = types
     async fetch_verifyRealName(
       name: string,
       idCardNumber: string,
-      idCardFront: string,
-      idCardBack: string
+      fileZ?: File,
+      fileF?: File
     ) {
-      api.verifyRealName(name, idCardNumber, idCardFront, idCardBack);
+      if (!fileZ || !fileF) {
+        Toast.show("请上传身份证正反面");
+        return false;
+      }
+      Toast.show({
+        duration: 0,
+        icon: "loading",
+        content: "加载中…",
+      });
+      let idCardFront: string, idCardBack: string;
+      const response = await api.uploadImage(fileZ);
+      if (response.kind === "ok") {
+        idCardFront = response.filePath;
+      } else {
+        Toast.show("上传失败");
+        return false;
+      }
+      const responseF = await api.uploadImage(fileF);
+      if (responseF.kind === "ok") {
+        idCardBack = responseF.filePath;
+      } else {
+        Toast.show("上传失败");
+        return false;
+      }
+      console.log(name, idCardNumber, idCardFront, idCardBack);
+      const res = await api.verifyRealName(
+        name,
+        idCardNumber,
+        idCardFront,
+        idCardBack
+      );
+      Toast.clear();
+      if (res.kind === "ok") {
+        Toast.show("你的身份证信息已提交成功请耐心等待审核。");
+        return true;
+      } else {
+        Toast.show("请求失败");
+        return false;
+      }
     },
     async fetch_qinshihuang(amount: number) {
       const response = await api.qinshihuang(self.wallet.accountId, amount);

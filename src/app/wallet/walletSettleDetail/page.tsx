@@ -1,12 +1,14 @@
 "use client";
-import { Input, Toast, Button, Space, NavBar, List, Switch } from "antd-mobile";
-import { useState } from "react";
+import { NavBar } from "antd-mobile";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
+import { useStores } from "@/models";
 
-export default function Page() {
-  const [password, setPassword] = useState<string>("");
-  const [passwordC, setPasswordC] = useState<string>("");
+export default observer(function Page() {
   const router = useRouter();
+  const {
+    walletStore: { currttenYue },
+  } = useStores();
   return (
     <div
       style={{
@@ -62,4 +64,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
+});

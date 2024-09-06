@@ -5,8 +5,9 @@ import sc_pub_imag_doneBt from "@/../public/doneBt.png";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStores } from "@/models";
+import { observer } from "mobx-react-lite";
 
-export default function Page() {
+export default observer(function Page() {
   const [password, setPassword] = useState<string>("");
   const [passwordC, setPasswordC] = useState<string>("");
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function Page() {
         style={{ background: "white", height: 64 }}
         onBack={() => router.back()}
       >
-        设置支付密码121212
+        设置支付密码
       </NavBar>
 
       <div style={{ background: "white", marginTop: 20 }}>
@@ -104,4 +105,4 @@ export default function Page() {
       />
     </div>
   );
-}
+});

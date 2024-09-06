@@ -31,17 +31,7 @@ export default observer(function Page() {
       >
         结算此聊豆
       </NavBar>
-      <div
-        style={
-          {
-            // display: "flex",
-            // flex: 1,
-            // flexDirection: "column",
-            // alignItems: "center",
-            // background: "#F7F7F7",
-          }
-        }
-      >
+      <div>
         <div
           className="bg-jiesuan"
           style={{
@@ -73,7 +63,7 @@ export default observer(function Page() {
               折算金额
             </div>
             <div className="text-4xl font-medium text-center text-white ">
-              {currttenYue}
+              {parseInt((currttenYue / 100).toString())}
             </div>
             <div className="text-sm font-light text-center text-white text-opacity-60 mb-2 absolute -bottom-10  ">
               本周剩余结算额度100元

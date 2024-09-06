@@ -3,8 +3,9 @@ import { NavBar, List, Result } from "antd-mobile";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useStores } from "@/models";
+import { observer } from "mobx-react-lite";
 
-export default function Page() {
+export default observer(function Page() {
   const router = useRouter();
   const {
     walletStore: { fetch_getRecords, walletSettleList },
@@ -56,4 +57,4 @@ export default function Page() {
       )}
     </div>
   );
-}
+});

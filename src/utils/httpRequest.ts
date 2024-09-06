@@ -197,16 +197,6 @@ const uploadImage = (file: File) => {
 // // https://testapp.lianxi.com/relation/getFansList?clientType=2&clientVersion=3005002&lang=zh_CN&num=20&personId=11893
 // // https://testapp.lianxi.com/relation/getFriendList?clientType=2&clientVersion=3005002&lang=zh_CN&personId=11893
 
-const verifyRealName = (
-  name: string,
-  idCardNumber: string,
-  idCardFront: string,
-  idCardBack: string
-) =>
-  service.post("/paywallet/verifyRealName", {
-    name,
-  });
-
 const httpRequest = {
   service,
   getRmsgByH5,

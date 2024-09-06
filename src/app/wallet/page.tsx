@@ -1,10 +1,10 @@
 "use client";
-import { Toast, NavBar, Space, Grid, List, Radio, Popup } from "antd-mobile";
+import { NavBar, Space, Grid, List, Radio, Popup } from "antd-mobile";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
 import { useStores } from "@/models";
-
+import { useEffect } from "react";
 import sc_pub_buttonBg from "@/../public/buttonBg.png";
 import walletBg from "@/../public/walletBg.png";
 import sc_pub_cld from "@/../public/cld.png";
@@ -12,8 +12,6 @@ import sc_pub_imag_right from "@/../public/right.png";
 import sc_pub_chargeBt from "@/../public/chargeBt.png";
 import sc_pub_zhifubao from "@/../public/zhifubao.png";
 import sc_pub_weixin from "@/../public/weixin.png";
-import { useEffect } from "react";
-import { number } from "mobx-state-tree/dist/internal";
 
 function Page_no_active() {
   const router = useRouter();
@@ -157,7 +155,7 @@ const Page_active = observer(function Page_active() {
                         marginLeft: 3,
                       }}
                     >
-                      {Number(item) * 7}此聊豆
+                      {Number(item) * 7 * 10}此聊豆
                     </div>
                   </div>
                 </div>
@@ -295,17 +293,9 @@ const Page_active = observer(function Page_active() {
 export default observer(function Page() {
   const router = useRouter();
   const {
-    walletStore: {
-      currttenYue,
-      isActivity,
-      fetch_getWallet,
-      apiCode,
-      fetch_getMobilePerson,
-    },
+    walletStore: { currttenYue, isActivity, fetch_getWallet, apiCode },
   } = useStores();
   useEffect(() => {
-    console.log("qqqq11");
-    console.log(apiCode);
     if (apiCode) {
       fetch_getWallet();
     }
